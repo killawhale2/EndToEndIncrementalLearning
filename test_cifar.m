@@ -1,8 +1,8 @@
-imdbs_dir = '/home/GAIT_local/SSD/cifar100_incremental/'; % Edit me!
-nets_dir = '/home/GAIT/experimentsInria/cifar100/'; % Edit me!
-sufix = '-Herding-0-2000'; % Edit me!
-
-batchs = [20]; % Edit me!
+imdbs_dir = './cifar100_incremental_not_random/'; % Edit me!
+nets_dir = './cifar100_incremental_nets'; % Edit me!
+sufix = '-Herding-000-2000'; % Edit me!
+expDir = './result/cifar100/' % Edit me!
+batchs = [10]; % Edit me!
 nIters = 1; % Edit me!
 
 if ~exist('gpuId', 'var')
@@ -20,7 +20,7 @@ for nbatch_idx=1:length(batchs)
                 net_name = 'net-epoch-100.mat';
             else
                 net_pattern = sprintf('cifar-resnet-32-batch%02d-block%02d-iter%02d%s', batchs(nbatch_idx), nblock_idx, niter_idx, sufix);
-                results_path = fullfile(nets_dir, sprintf('cifar-resnet-32-batch%02d-block%02d-iter%02d%s', batchs(nbatch_idx), nblock_idx, niter_idx, sufix), 'results');
+                results_path = fullfile(expDir, sprintf('cifar-resnet-32-batch%02d-block%02d-iter%02d%s', batchs(nbatch_idx), nblock_idx, niter_idx, sufix), 'results');
                 net_name = 'net-final.mat';
 	        %net_name = 'net-epoch-100.mat';
             end
@@ -30,7 +30,8 @@ for nbatch_idx=1:length(batchs)
             end
             
             % Load net.
-            netPath = fullfile(nets_dir, net_pattern, net_name);
+	
+            netPath = fullfile(expDir, net_pattern, net_name);
             outpath = fullfile(results_path, 'results.mat');
             if exist(netPath, 'file') && ~exist(outpath, 'file')
                 load(netPath);
@@ -78,7 +79,7 @@ for nbatch_idx=1:length(batchs)
                 results.labels = labels;
                 
                 % Save model.
-                save(outpath, 'results');
+                save(outpath, '-struct','results');
             end
         end
     end

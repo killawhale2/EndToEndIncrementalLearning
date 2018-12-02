@@ -99,8 +99,8 @@ for epoch=start+1:opts.numEpochs
     state.imdb = imdb ;
     
     if numel(opts.gpus) <= 1
-        [stats.train(epoch),prof] = process_epoch(net, state, opts, 'train') ;
-        stats.val(epoch) = process_epoch(net, state, opts, 'val') ;
+        [stats.train,prof] = process_epoch(net, state, opts, 'train') ;
+        stats.val = process_epoch(net, state, opts, 'val') ;
         if opts.profile
             profview(0,prof) ;
             keyboard ;

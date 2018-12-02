@@ -13,7 +13,7 @@ opts.origstyle = 'multiclass';
 derOutputs = opts.derOutputs;
 
 %% Update loss layer for the old layer. Only the "last new" task is updated.
-if strcmp(opts.orig_loss, 'for_keep')
+%if strcmp(opts.orig_loss, 'for_keep')
     switch opts.mode
         case {'multiclass', 'multiclasshinge'}
             layeropts.origstyle = 'multiclass';
@@ -28,10 +28,10 @@ if strcmp(opts.orig_loss, 'for_keep')
     index2 = strfind({net.layers.name}, 'loss_distillation');
     index2 = find(not(cellfun('isempty', index2)));
     if isempty(index2)
-        net.addLayer('loss_distillation', dagnn.SoftmaxDiffLoss('mode', opts.keep_response_loss, 'temperature', opts.distillation_temp, 'origstyle', layeropts.origstyle), {net.layers(index(end)).name, 'dist_labels'}, 'loss_distillation') ;
+        net.addLayer('loss_distillation', SoftmaxDiffLoss('mode', opts.keep_response_loss, 'temperature', opts.distillation_temp, 'origstyle', layeropts.origstyle), {net.layers(index(end)).name, 'dist_labels'}, 'loss_distillation') ;
     end
     derOutputs = [derOutputs {'loss_distillation', 1}]
-end
+%end
 
 
 

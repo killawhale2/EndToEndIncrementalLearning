@@ -3,11 +3,11 @@
 
 max_iters = 5;
 nclasses = 100;
-batch_sizes = [2 5 10 20 50];
-imdb_path = '/home/GAIT_local/Datasets/cifar-100-matlab/train.mat'; % Edit me!
-imdbtest_path = '/home/GAIT_local/Datasets/cifar-100-matlab/test.mat'; % Edit me!
-metadata = '/home/GAIT_local/Datasets/cifar-100-matlab/meta.mat'; % Edit me!
-outdir = '/home/GAIT/SSD/cifar100_incremental'; % Edit me!
+batch_sizes = [10];
+imdb_path = './cifar-100-matlab/train.mat'; % Edit me!
+imdbtest_path = './cifar-100-matlab/test.mat'; % Edit me!
+metadata = './cifar-100-matlab/meta.mat'; % Edit me!
+outdir = './cifar100_incremental_not_random'; % Edit me!
 
 %% Build base imdb
 train = load(imdb_path);
@@ -45,7 +45,7 @@ for nit=1:max_iters
             en = in + batch_sizes(i) - 1;
             
             % Build imdb.images
-            classes = order(in:en);
+            classes = linspace(in,en,batch_sizes(i));
             positions = find(ismember(imdb_.images.labels, classes));
             imdb.images.data = imdb_.images.data(:, :, :, positions);
             imdb.images.classes = imdb_.images.labels(positions);
@@ -65,7 +65,6 @@ for nit=1:max_iters
             imdb.meta.meanType = imdb_.meta.meanType;
             imdb.meta.whitenData = 0;
             imdb.meta.contrastNormalization = 0;
-            
             %% Save imdb
             outname = sprintf('cifar-%d-%02d-%02d-%02d.mat', nclasses, batch_sizes(i), j, nit);
             outpath = fullfile(outdir, outname);

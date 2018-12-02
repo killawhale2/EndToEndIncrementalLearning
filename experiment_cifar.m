@@ -1,18 +1,18 @@
-imdbs_dir = '/home/GAIT_local/SSD/cifar100_incremental/'; % Edit me!
-nets_dir = '/home/GAIT/experimentsInria/cifar100/'; % Edit me!
+imdbs_dir = './cifar100_incremental_not_random/'; % Edit me!
+nets_dir = './cifar100_incremental_nets/'; % Edit me!
 
-batchs = 20; % Number of classes per incremental step. Accepts array of sizes. Edit me!
+batchs = 10; % Number of classes per incremental step. Accepts array of sizes. Edit me!
 nIters = 1; % Number of iterations with different class order. Edit me!
 
 if ~exist('gpuId', 'var')
-    gpuId = 2; % Gpu to execute the training. Edit me!
+    gpuId = 1; % Gpu to execute the training. Edit me!
 end
 
 % Define opts.
 opts.distillation_temp = 2; % Distillation temperature. Always 2.
 
 % for training details
-expDir = '/home/GAIT/experimentsInria/cifar100/' ; % Out path. Edit me!
+expDir = './result/cifar100/' ; % Out path. Edit me!
 opts.train.batchSize = 128;
 opts.train.numSubBatches = 1 ;
 opts.train.continue = true ;
@@ -39,7 +39,7 @@ for nbatch_idx=1:length(batchs)
             if ~exist(outpath, 'file')
                 if nblock_idx == 2
                     % Load initial network.
-                    net_pattern = sprintf('cifar-resnet-32-batch%02d-block01-iter%02d', batchs(nbatch_idx), niter_idx);
+                    net_pattern = sprintf('cifar-resnet-32');
                     net_name = 'net-epoch-100.mat';
                     imdb_pattern = sprintf('cifar-100-%02d-%02d-%02d.mat', batchs(nbatch_idx), nblock_idx-1, niter_idx);
                     
@@ -51,7 +51,7 @@ for nbatch_idx=1:length(batchs)
                     if ~isfield(exemplars.images, 'labels')
                         exemplars.images.labels = exemplars.images.classes;
                     end
-                    
+                  
                     % Load net.
                     netPath = fullfile(nets_dir, net_pattern, net_name);
                     load(netPath);
@@ -62,6 +62,7 @@ for nbatch_idx=1:length(batchs)
                     % Build new exemplars set.
                     opts.totalClasses = batchs(nbatch_idx);
                     exemplars = build_exemplars_set([], exemplars, opts);
+                    
                 else
                     net_pattern = sprintf('cifar-resnet-32-batch%02d-block%02d-iter%02d-%s', batchs(nbatch_idx), nblock_idx-1, niter_idx, fix);
                     net_name = 'net-final.mat';
@@ -71,7 +72,7 @@ for nbatch_idx=1:length(batchs)
                 opts.newtaskdim = batchs(nbatch_idx);
                 
                 % Load net.
-                netPath = fullfile(nets_dir, net_pattern, net_name);
+                netPath = fullfile(expDir, net_pattern, net_name);
                 load(netPath);
                 net = dagnn.DagNN.loadobj(net);
                 

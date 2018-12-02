@@ -53,7 +53,7 @@ derOutputs = {};
             end
             net.removeLayer(net.layers(index(iloss_idx)).name);
             
-            net.addLayer(sprintf('loss_old_%02d', last+1), dagnn.SoftmaxDiffLoss('mode', opts.keep_response_loss, 'temperature', opts.distillation_temp, 'origstyle', opts.origstyle) , inputs_, outputs_) ;
+            net.addLayer(sprintf('loss_old_%02d', last+1), SoftmaxDiffLoss('mode', opts.keep_response_loss, 'temperature', opts.distillation_temp, 'origstyle', opts.origstyle) , inputs_, outputs_) ;
             derOutputs = [derOutputs {sprintf('loss_old_%02d', last+1), 1}]
         else
             inputs_ = net.layers(index(iloss_idx)).inputs;

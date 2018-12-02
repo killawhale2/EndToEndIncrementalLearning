@@ -23,8 +23,7 @@ net.meta.classes.name = cat(2, net.meta.classes.name, unique(imdb.images.classes
 if ~isfield(net.meta, 'eqlabs')
     net.meta.eqlabs = net.meta.classes.name;
 end
-
-net.meta.eqlabs = cat(2, net.meta.eqlabs, unique(imdb.images.classes)); % Add previous classes.
+%net.meta.eqlabs = cat(2, net.meta.eqlabs, unique(imdb.images.classes)); % Add previous classes.
 
 % Build imdb with new imdb + exemplars.
 imdb.meta.exemplars = cat(2, ones(1, length(lastExemplars.images.labels)), zeros(1, length(imdb.images.labels)));
@@ -119,7 +118,6 @@ exemplarsFinal.images.data = exemplarsFinal.images.data / 255.0;
 exemplarsFinal.images.data = bsxfun(@minus, exemplarsFinal.images.data, exemplarsFinal.meta.dataMean);
 clear('exemplars_');
 imdb = exemplarsFinal;
-
 if isvector(imdb.images.labels)
     ulabs = net.meta.eqlabs;
     % Set new ones
@@ -160,7 +158,7 @@ nn = sum(lastExemplars.images.set == 1 & lastExemplars.images.labels == aux(1));
 aux2 = opts.maxExemplars;
 opts.maxExemplars = opts.maxExemplars + (opts.newtaskdim * nn);
 opts.totalClasses = length(unique(lastExemplars.images.labels)) + opts.newtaskdim;
-exemplars = build_examplars_set(lastExemplars, imdb_or, opts);
+exemplars = build_exemplars_set(lastExemplars, imdb_or, opts);
 opts.maxExemplars = aux2;
 opts.derOutputs = derOutputs;
 
@@ -292,11 +290,11 @@ opts.train.numEpochs = length(opts.train.learningRate);
 [net, info] = cnn_train_dag_exemplars(net, imdb, @getIncBatchDist, 'val', find(imdb.images.set == 3), opts.train, 'distillation', true);
 
 opts.derOutputs = derOutputs;
-[net, derOutputs] = fork_resnet_remove_distillation(net);
+[net, derOutputs] = fork_resnet_remove_distillation(net, derOutputs);
 opts.train.derOutputs = derOutputs;
 
 opts.net = net;
-exemplars = build_examplars_set(lastExemplars, imdb_or, opts);
+exemplars = build_exemplars_set(lastExemplars, imdb_or, opts);
 
 % Update output
 meta.meanval = imdb.meta.dataMean;

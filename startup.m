@@ -1,4 +1,2 @@
 addpath(genpath(pwd));
-run ../ResNet-Matconvnet/setup.m
-
-
+run ./ResNet-Matconvnet/setup.m
