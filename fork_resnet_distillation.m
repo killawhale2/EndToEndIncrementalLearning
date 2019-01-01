@@ -1,6 +1,6 @@
 function [net, derOutputs] = fork_resnet_distillation(net, varargin)
 % Based on Zhizhong Li's code
-% Medified by F. Castro for End-to-End Incremental Learning. ECCV2018
+% Modified by F. Castro for End-to-End Incremental Learning. ECCV2018
 
 opts.newtaskdim = 20; % # output of last layer
 opts.distillation_temp = 2; % distillation temperature.
@@ -9,6 +9,7 @@ opts = vl_argparse(opts, varargin);
 
 opts.mode = 'multiclass'; % type of last layer of the new path
 opts.keep_response_loss = 'MI'; % MI for mutual information, L1 for L1-norm. only works when orig_loss is 'for_keep'.
+opts.orig_loss = 'for_keep';
 opts.origstyle = 'multiclass';
 derOutputs = opts.derOutputs;
 

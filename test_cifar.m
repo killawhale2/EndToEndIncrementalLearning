@@ -1,8 +1,10 @@
+
 imdbs_dir = './cifar100_incremental_not_random/'; % Edit me!
 nets_dir = './cifar100_incremental_nets'; % Edit me!
 sufix = '-Herding-000-2000'; % Edit me!
 expDir = './result/cifar100/' % Edit me!
 batchs = [10]; % Edit me!
+
 nIters = 1; % Edit me!
 
 if ~exist('gpuId', 'var')
@@ -38,6 +40,11 @@ for nbatch_idx=1:length(batchs)
                 net = dagnn.DagNN.loadobj(net);
                 net.mode = 'test';
                 
+		% Parse labels to fit number of classes
+		if ~isfield(net.meta, 'eqlabs')
+    			net.meta.eqlabs = sort(net.meta.classes.name);
+		end
+
                 estim_labels = [];
                 labels = [];
                 for nimdb_idx=1:nblock_idx
